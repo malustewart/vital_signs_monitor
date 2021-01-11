@@ -597,7 +597,7 @@ void I2C_MasterInit(I2C_Type *base, const i2c_master_config_t *masterConfig, uin
 
     /* Configure baud rate. */
     I2C_MasterSetBaudRate(base, masterConfig->baudRate_Bps, srcClock_Hz);
-
+    //base->F = I2C_F_MULT(0b10) | I2C_F_ICR(0);//ojo modifique eseto
     /* Read out the FLT register. */
     fltReg = base->FLT;
 

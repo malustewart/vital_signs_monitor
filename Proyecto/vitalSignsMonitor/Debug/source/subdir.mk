@@ -5,23 +5,35 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../source/App.c \
+../source/MAX30102.c \
+../source/algorithm_by_RF.c \
+../source/gpio.c \
 ../source/i2c_sdk.c \
 ../source/semihost_hardfault.c \
 ../source/temperature_sensor.c \
+../source/uart_micros.c \
 ../source/vitalSignsMonitor.c 
 
 OBJS += \
 ./source/App.o \
+./source/MAX30102.o \
+./source/algorithm_by_RF.o \
+./source/gpio.o \
 ./source/i2c_sdk.o \
 ./source/semihost_hardfault.o \
 ./source/temperature_sensor.o \
+./source/uart_micros.o \
 ./source/vitalSignsMonitor.o 
 
 C_DEPS += \
 ./source/App.d \
+./source/MAX30102.d \
+./source/algorithm_by_RF.d \
+./source/gpio.d \
 ./source/i2c_sdk.d \
 ./source/semihost_hardfault.d \
 ./source/temperature_sensor.d \
+./source/uart_micros.d \
 ./source/vitalSignsMonitor.d 
 
 

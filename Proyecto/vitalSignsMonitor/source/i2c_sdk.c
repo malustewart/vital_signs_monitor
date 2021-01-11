@@ -15,6 +15,7 @@
 #include "fsl_common.h"
 #include "fsl_clock.h"
 #include"MK64F12.h"
+#include"hardware.h"
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
@@ -76,7 +77,8 @@ void i2c_sdk_init(void){
 
 	I2C_MasterGetDefaultConfig(&masterConfig);
 	masterConfig.baudRate_Bps = I2C_SDK_BAUDRATE;
-	I2C_MasterInit(I2C0, &masterConfig, CLOCK_GetFreq(I2C0_CLK_SRC));
+	//I2C_MasterInit(I2C0, &masterConfig, CLOCK_GetFreq(I2C0_CLK_SRC));
+	I2C_MasterInit(I2C0, &masterConfig,__CORE_CLOCK__);
 	I2C_MasterTransferCreateHandle(I2C0, &g_m_handle,i2c_master_callback, NULL);
 }
 
