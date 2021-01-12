@@ -9,11 +9,21 @@
  ******************************************************************************/
 
 #include "temperature_sensor.h"
+#include"i2c_sdk.h"
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
+#define MAX30205_ADDRESS	0x48  // address
 
+// Registros
+#define MAX30205_TEMP    0x00  // registro de solo lectura
+#define MAX30205_CONFIG  0x01  //
+#define MAX30205_THYST   0x02  //
+#define MAX30205_TOS     0x03  //
+
+#define TEMPERATURE_SENSOR_RECIVE_DATA_SIZE 2
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
@@ -21,6 +31,9 @@
 /*******************************************************************************
  * VARIABLES WITH GLOBAL SCOPE
  ******************************************************************************/
+uint16_t tempActual=0;//donde se almacena la temperatura actual medida
+uint8_t volatile i2cBuff[TEMPERATURE_SENSOR_RECIVE_DATA_SIZE];//buffer donde se almacena la informacion recivida por el modulo de temperatura
+
 
 /*******************************************************************************
  * FUNCTION PROTOTYPES FOR PRIVATE FUNCTIONS WITH FILE LEVEL SCOPE
@@ -40,9 +53,29 @@
  *******************************************************************************
  ******************************************************************************/
 
-int temp_get_temp()
+
+void temp_initMeasure(void){
+	i2c_sdk_readReg(MAX30205_ADDRESS, MAX30205_TEMP, i2cBuff, TEMPERATURE_SENSOR_RECIVE_DATA_SIZE);
+}
+
+bool temp_status(void){
+	if(i2c_sdk_status()==i2c_sdk_REPOSO){
+		return true;
+	}else{
+		return false;
+	}
+
+}
+
+float temp_get_temp(temp_unit_t unit)
 {
-    return -1;
+	float tempNoUnits;
+	tempActual = i2cBuff[0] << 8 | i2cBuff[1];
+	tempNoUnits=tempActual* 0.00390625;
+	if (unit==FAHRENHEIT){
+		tempNoUnits=(tempNoUnits*(9.0/5.0))+32;
+	}
+    return tempNoUnits;
 }
 
 /*******************************************************************************
@@ -55,7 +88,9 @@ int temp_get_temp()
  *******************************************************************************
 						            INTERRUPT SERVICE ROUTINES
  *******************************************************************************
+ *******************************************************************************
  ******************************************************************************/
+
 
 /******************************************************************************/
 
