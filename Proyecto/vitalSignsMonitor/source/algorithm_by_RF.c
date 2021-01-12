@@ -152,7 +152,7 @@ void rf_heart_rate_and_oxygen_saturation(uint32_t *pun_ir_buffer, int32_t n_ir_b
 
   // After trend removal, the mean represents DC level
   xy_ratio= (f_y_ac*f_ir_mean)/(f_x_ac*f_red_mean);  //formula is (f_y_ac*f_x_dc) / (f_x_ac*f_y_dc) ;
-  if(xy_ratio>0.02 && xy_ratio<3) { // Check boundaries of applicability 1.84
+  if(xy_ratio>0.02 && xy_ratio<1.84) { // Check boundaries of applicability 1.84
     *pn_spo2 = (-45.060*xy_ratio + 30.354)*xy_ratio + 94.845;
     *pch_spo2_valid = 1;
   } else {

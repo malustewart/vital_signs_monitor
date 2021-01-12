@@ -84,41 +84,42 @@ void App_Run (void)
 	uint32_t bir[500];
 	uint32_t bred[500];
 	maxim_max30102_reset();
+
 	maxim_max30102_init();
-	maxim_max30102_read_fifo(&red,&ir);
-	while(1){
-		for(uint16_t i=0;i<100;i++){
-			while(gpioRead(PORTNUM2PIN(GPIO_PB,23)));
-			maxim_max30102_read_fifo(&red,&ir);
-			bir[i]=ir;
-			bred[i]=red;
-			itoa(red, printD,10);
-			uartWriteMsg(0,printD, 6);
-			uartWriteMsg(0,",",1);
-			itoa(ir, printD,10);
-			uartWriteMsg(0,printD, 6);
-			uartWriteMsg(0,"\n", 1);
-		}
-		//		if(!gpioRead(PORTNUM2PIN(GPIO_PB,23))){
-		//			maxim_max30102_read_fifo(&red,&ir);
-		//		}
-	//	maxim_heart_rate_and_oxygen_saturation(bir,  125, bred,  &spo22,&isvalid1 ,&hr , &isvalid2);
-		rf_heart_rate_and_oxygen_saturation(bir, 100, bred,&spo22,&isvalid1, &hr, &isvalid2, &r, &cor);
-
-		if(isvalid2==1){
-			ii++;
-//			itoa(hr, printD,10);
-//			uartWriteMsg(0,printD, 4);
+	//maxim_max30102_read_fifo(&red,&ir);
+//	while(1){
+//		for(uint16_t i=0;i<100;i++){
+//			while(gpioRead(PORTNUM2PIN(GPIO_PB,23)));
+//			maxim_max30102_read_fifo(&red,&ir);
+//			bir[i]=ir;
+//			bred[i]=red;
+//			itoa(red, printD,10);
+//			uartWriteMsg(0,printD, 6);
+//			uartWriteMsg(0,",",1);
+//			itoa(ir, printD,10);
+//			uartWriteMsg(0,printD, 6);
 //			uartWriteMsg(0,"\n", 1);
-		}
-		if(isvalid1==1){
-					ii++;
-		//			itoa(hr, printD,10);
-		//			uartWriteMsg(0,printD, 4);
-		//			uartWriteMsg(0,"\n", 1);
-				}
+//		}
+//		//		if(!gpioRead(PORTNUM2PIN(GPIO_PB,23))){
+//		//			maxim_max30102_read_fifo(&red,&ir);
+//		//		}
+//	//	maxim_heart_rate_and_oxygen_saturation(bir,  125, bred,  &spo22,&isvalid1 ,&hr , &isvalid2);
+//		rf_heart_rate_and_oxygen_saturation(bred, 100,bir,&spo22,&isvalid1, &hr, &isvalid2, &r, &cor);
+//
+//		if(isvalid2==1){
+//			ii++;
+////			itoa(hr, printD,10);
+////			uartWriteMsg(0,printD, 4);
+////			uartWriteMsg(0,"\n", 1);
+//		}
+//		if(isvalid1==1){
+//					ii++;
+//		//			itoa(hr, printD,10);
+//		//			uartWriteMsg(0,printD, 4);
+//		//			uartWriteMsg(0,"\n", 1);
+//				}
 
-}
+//}
 }
 
 
