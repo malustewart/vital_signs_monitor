@@ -151,23 +151,16 @@ bool maxim_max30102_read_fifo(uint32_t *pun_red_led, uint32_t *pun_ir_led)
 * \retval       true on success
 */
 {
-  uint32_t un_temp;
-  unsigned char uch_temp;
+   uint32_t un_temp;
+   unsigned char uch_temp;
   *pun_red_led=0;
   *pun_ir_led=0;
-  char ach_i2c_data[6];
-  
+   char ach_i2c_data[6];
+
   //read and clear status register
   maxim_max30102_read_reg(REG_INTR_STATUS_1, &uch_temp);
   maxim_max30102_read_reg(REG_INTR_STATUS_2, &uch_temp);
-  
-  //ach_i2c_data[0]=REG_FIFO_DATA;
-//  if(i2c.write(MAX30102_I2C_WRITE_ADDR, ach_i2c_data, 1, true)!=0)
-//    return false;
-//  if(i2c.read(MAX30102_I2C_READ_ADDR, ach_i2c_data, 6, false)!=0)
-//  {
-//    return false;
-//  }
+
   i2c_sdk_readReg(MAX30102_I2C_READ_ADDR, REG_FIFO_DATA, ach_i2c_data, 6);
   while(i2c_sdk_status()!=i2c_sdk_REPOSO);
 
@@ -179,7 +172,7 @@ bool maxim_max30102_read_fifo(uint32_t *pun_red_led, uint32_t *pun_ir_led)
   *pun_red_led+=un_temp;
   un_temp=(unsigned char) ach_i2c_data[2];
   *pun_red_led+=un_temp;
-  
+
   un_temp=(unsigned char) ach_i2c_data[3];
   un_temp<<=16;
   *pun_ir_led+=un_temp;
@@ -190,9 +183,78 @@ bool maxim_max30102_read_fifo(uint32_t *pun_red_led, uint32_t *pun_ir_led)
   *pun_ir_led+=un_temp;
   *pun_red_led&=0x03FFFF;  //Mask MSB [23:18]
   *pun_ir_led&=0x03FFFF;  //Mask MSB [23:18]
-  
+
   
   return true;
+}
+bool maxim_max30102_read_fifoNB(uint32_t *pun_red_led, uint32_t *pun_ir_led)
+/**
+* \brief        Read a set of samples from the MAX30102 FIFO register
+* \par          Details
+*               This function reads a set of samples from the MAX30102 FIFO register
+*
+* \param[out]   *pun_red_led   - pointer that stores the red LED reading data
+* \param[out]   *pun_ir_led    - pointer that stores the IR LED reading data
+*
+* \retval       true on success
+*/
+{
+  static uint32_t un_temp;
+  static unsigned char uch_temp;
+  *pun_red_led=0;
+  *pun_ir_led=0;
+  static char ach_i2c_data[6];
+  static uint8_t counter=0;
+
+  
+  switch (counter){
+  case 0:
+	  i2c_sdk_readReg(MAX30102_I2C_READ_ADDR, REG_INTR_STATUS_1, &uch_temp, 1);
+	  counter++;
+	  break;
+  case 1:
+	  if(i2c_sdk_status()==i2c_sdk_REPOSO){
+		  counter++;
+		  i2c_sdk_readReg(MAX30102_I2C_READ_ADDR, REG_INTR_STATUS_1, &uch_temp, 1);
+	  }
+	  break;
+  case 2:
+	  if(i2c_sdk_status()==i2c_sdk_REPOSO){
+		  counter++;
+		  i2c_sdk_readReg(MAX30102_I2C_READ_ADDR, REG_FIFO_DATA, ach_i2c_data, 6);
+	  }
+	  break;
+  case 3:
+	  if(i2c_sdk_status()==i2c_sdk_REPOSO){
+		  counter=1;
+		  un_temp=(unsigned char) ach_i2c_data[0];
+		  un_temp<<=16;
+		  *pun_red_led+=un_temp;
+		  un_temp=(unsigned char) ach_i2c_data[1];
+		  un_temp<<=8;
+		  *pun_red_led+=un_temp;
+		  un_temp=(unsigned char) ach_i2c_data[2];
+		  *pun_red_led+=un_temp;
+
+		  un_temp=(unsigned char) ach_i2c_data[3];
+		  un_temp<<=16;
+		  *pun_ir_led+=un_temp;
+		  un_temp=(unsigned char) ach_i2c_data[4];
+		  un_temp<<=8;
+		  *pun_ir_led+=un_temp;
+		  un_temp=(unsigned char) ach_i2c_data[5];
+		  *pun_ir_led+=un_temp;
+		  *pun_red_led&=0x03FFFF;  //Mask MSB [23:18]
+		  *pun_ir_led&=0x03FFFF;  //Mask MSB [23:18]
+		  i2c_sdk_readReg(MAX30102_I2C_READ_ADDR, REG_INTR_STATUS_1, &uch_temp, 1);
+		  return true;
+
+	  }
+
+	  break;
+
+  }
+  return false;
 }
 
 bool maxim_max30102_reset()
@@ -212,3 +274,4 @@ bool maxim_max30102_reset()
     else
         return true;    
 }
+

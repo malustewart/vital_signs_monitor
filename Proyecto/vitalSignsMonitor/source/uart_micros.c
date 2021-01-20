@@ -172,15 +172,15 @@ void uartInit (uint8_t id, uart_cfg_t config){
 
 void UART_SetBaudRate2 (UART_Type *uart, uint32_t baudrate){
 	uint16_t sbr, brfa;
-	uint32_t clock;
+	uint32_t clock_y;
 
-	clock = ((uart == UART0) || (uart == UART1)) ? (__CORE_CLOCK__):(__CORE_CLOCK__>>1);
+	clock_y = ((uart == UART0) || (uart == UART1)) ? (__CORE_CLOCK__):(__CORE_CLOCK__>>1);
+	//clock_y=__CORE_CLOCK__;
+	//baudrate = ((baudrate == 0)?(UART_HAL_DEFAULT_BAUDRATE):
+		//	((baudrate > 0x1FFF)?(UART_HAL_DEFAULT_BAUDRATE):(baudrate)));
 
-	baudrate = ((baudrate == 0)?(UART_HAL_DEFAULT_BAUDRATE):
-			((baudrate > 0x1FFF)?(UART_HAL_DEFAULT_BAUDRATE):(baudrate)));
-
-	sbr = clock / (baudrate << 4);
-	brfa = (clock << 1) / baudrate - (sbr << 5);
+	sbr = clock_y / (baudrate << 4);
+	brfa = (clock_y << 1) / baudrate - (sbr << 5);
 
 	uart->BDH = UART_BDH_SBR(sbr >> 8);
 	uart->BDL = UART_BDL_SBR(sbr);

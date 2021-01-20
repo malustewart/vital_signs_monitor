@@ -62,6 +62,7 @@ void App_Run (void);
 int main (void)
 {
     hw_Init();
+    //BOARD_InitBootClocks();
     hw_DisableInterrupts();
     App_Init(); /* Program-specific setup */
     hw_EnableInterrupts();

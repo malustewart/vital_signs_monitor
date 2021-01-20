@@ -70,7 +70,7 @@ const float mean_X = (float)(BUFFER_SIZE-1)/2.0; // Mean value of the set of int
 
 
 void rf_heart_rate_and_oxygen_saturation(uint32_t *pun_ir_buffer, int32_t n_ir_buffer_length, uint32_t *pun_red_buffer, float *pn_spo2, int8_t *pch_spo2_valid, 
-                int32_t *pn_heart_rate, int8_t *pch_hr_valid, float *ratio, float *correl)
+                int32_t *pn_heart_rate, int8_t *pch_hr_valid, float *ratio, float *correl, float * ir_mean, float * red_mean)
 /**
 * \brief        Calculate the heart rate and SpO2 level, Robert Fraczkiewicz version
 * \par          Details
@@ -105,6 +105,12 @@ void rf_heart_rate_and_oxygen_saturation(uint32_t *pun_ir_buffer, int32_t n_ir_b
   f_ir_mean=f_ir_mean/n_ir_buffer_length ;
   f_red_mean=f_red_mean/n_ir_buffer_length ;
   
+  (*ir_mean)=f_ir_mean;
+  (*red_mean)=f_red_mean;
+
+
+
+
   // remove DC 
   for (k=0,ptr_x=an_x,ptr_y=an_y; k<n_ir_buffer_length; ++k,++ptr_x,++ptr_y) {
     *ptr_x = pun_ir_buffer[k] - f_ir_mean;

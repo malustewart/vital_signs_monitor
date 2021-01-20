@@ -1,33 +1,24 @@
 /***************************************************************************//**
-  @file     idc_sdk.c
+  @file     pulse_oximeter.h
   @brief    ...
   @author   Maria Luz Stewart Harris, Matias Pierdominici, Gonzalo Silva
  ******************************************************************************/
 
-#ifndef I2C_SDK_H_
-#define I2C_SDK_H_
+#ifndef PULSE_OXIMETER
+#define PULSE_OXIMETER
 
 /*******************************************************************************
  * INCLUDE HEADER FILES
  ******************************************************************************/
-#include "MK64F12.h"
-#include <stdint.h>
-#include <stddef.h>
-
+#include<stdint.h>
+#include<stdbool.h>
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
-#define I2C_SDK_BUFF_SIZE 20
+#define PULSE_OXIMETER_ONE_SAMPLE 1
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
-typedef enum
-{
-	i2c_sdk_EN_PROCESO, //el perifierio se encuentra en uso
-	i2c_sdk_REPOSO, //el periferio no esta realizando ninguna accion
-	i2c_sdk_ERROR  //hubo un error en la transaccion
-} i2c_sdk_status_t;
-
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
@@ -37,44 +28,35 @@ typedef enum
  * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
 
-/**
- * @brief Inicializa el i2c0, con sda(PTE25) y scl(PTE24)
- *
- * @param void
- * @return void
+/** @ brief realiza la inicializacion del MAX30102,
+ * previamente deve estar inicializado el driver de i2c
  */
- void i2c_sdk_init(void);
+void pulse_oximeter_init(void);
 
- /**
-  * @brief Escrive en un registro de un dispositivo conectado al i2c
-  *
-  * @param adress: direccion del dispositivo
-  * @param reg: registro al cual se le realiza la escritura
-  * @param data:  arreglo con la informacion a enviar
-  * @param sizeData: cantidad de bytes en data
-  * @return void
-  */
- void i2c_sdk_readReg(uint8_t adress,uint8_t reg, uint8_t * volatile data,uint8_t sizeData);
+/**@brief devuelve la medicion de ritmo caridaco en ppm
+ * @param devuele en hr[] las pulsaciones en ppm
+ * @return si es true el contenido de hr[] es valido
+ */
+bool pulse_oximeter_hrReady(uint32_t hr[PULSE_OXIMETER_ONE_SAMPLE]);
 
- /**
-  * @brief Leo el contenido de un registro de un periferico
-  *
-  * @param adress: direccion del dispositivo
-  * @param reg: registro al cual se le realiza la lectura
-  * @param data:  arreglo con la informacion a recivir
-  * @param sizeData: cantidad de bytes en data
-  */
- void i2c_sdk_writeReg(uint8_t adress,uint8_t reg, uint8_t * volatile data,uint8_t sizeData);
+/**@brief devuelve la medicion de spo2 en %
+ * @param devuele en spo2[] la concentracion de oxigeno en sangre
+ * @return si es true el contenido de spo2[] es valido
+ */
+bool pulse_oximeter_spo2Ready(float spo2[PULSE_OXIMETER_ONE_SAMPLE]);
 
- /**
-  * @brief Devuelve en que estado se encuentra el periferico
-  */
- i2c_sdk_status_t i2c_sdk_status(void);
-
-
+/**@brief cada vez que se acumulen las 100 muestras de la lectura del ir y red
+ * se aplica el algoritmo para obtener el pulso y spo2. Despues de llamar a esta funcion, ejecutar
+ * pulse_oximeter_xxReady
+ * @param redData[] valor de la ultima lecura del sensor red
+ * @param irData[] valor de la ultima lecura del sensor red
+ * @return true, el valor de redData y irData es valido
+ */
+bool pulse_oximeter_update(uint32_t redData[PULSE_OXIMETER_ONE_SAMPLE],uint32_t irData[PULSE_OXIMETER_ONE_SAMPLE]);
 
 
 /*******************************************************************************
  ******************************************************************************/
 
-#endif /* I2C_SDK_H_ */
+
+#endif /* PULSE_OXIMETER */

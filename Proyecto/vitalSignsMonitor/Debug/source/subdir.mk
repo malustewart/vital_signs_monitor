@@ -6,10 +6,16 @@
 C_SRCS += \
 ../source/App.c \
 ../source/MAX30102.c \
+../source/PIT.c \
+../source/adc.c \
 ../source/algorithm_by_RF.c \
+../source/demCircBuffer.c \
+../source/ecg_afe.c \
 ../source/gpio.c \
 ../source/i2c_sdk.c \
+../source/pulse_oximeter.c \
 ../source/semihost_hardfault.c \
+../source/send_package.c \
 ../source/temperature_sensor.c \
 ../source/uart_micros.c \
 ../source/vitalSignsMonitor.c 
@@ -17,10 +23,16 @@ C_SRCS += \
 OBJS += \
 ./source/App.o \
 ./source/MAX30102.o \
+./source/PIT.o \
+./source/adc.o \
 ./source/algorithm_by_RF.o \
+./source/demCircBuffer.o \
+./source/ecg_afe.o \
 ./source/gpio.o \
 ./source/i2c_sdk.o \
+./source/pulse_oximeter.o \
 ./source/semihost_hardfault.o \
+./source/send_package.o \
 ./source/temperature_sensor.o \
 ./source/uart_micros.o \
 ./source/vitalSignsMonitor.o 
@@ -28,10 +40,16 @@ OBJS += \
 C_DEPS += \
 ./source/App.d \
 ./source/MAX30102.d \
+./source/PIT.d \
+./source/adc.d \
 ./source/algorithm_by_RF.d \
+./source/demCircBuffer.d \
+./source/ecg_afe.d \
 ./source/gpio.d \
 ./source/i2c_sdk.d \
+./source/pulse_oximeter.d \
 ./source/semihost_hardfault.d \
+./source/send_package.d \
 ./source/temperature_sensor.d \
 ./source/uart_micros.d \
 ./source/vitalSignsMonitor.d 

@@ -16,6 +16,7 @@
 #include "fsl_clock.h"
 #include"MK64F12.h"
 #include"hardware.h"
+
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
@@ -80,6 +81,8 @@ void i2c_sdk_init(void){
 	//I2C_MasterInit(I2C0, &masterConfig, CLOCK_GetFreq(I2C0_CLK_SRC));
 	I2C_MasterInit(I2C0, &masterConfig,__CORE_CLOCK__);
 	I2C_MasterTransferCreateHandle(I2C0, &g_m_handle,i2c_master_callback, NULL);
+
+
 }
 
  void i2c_sdk_readReg(uint8_t adress,uint8_t reg, uint8_t * volatile data,uint8_t sizeData){
@@ -137,6 +140,7 @@ void i2c_sdk_init(void){
  *******************************************************************************
  ******************************************************************************/
 
+
 /*******************************************************************************
  *******************************************************************************
 						            INTERRUPT SERVICE ROUTINES
@@ -146,6 +150,8 @@ void i2c_sdk_init(void){
      /* Signal transfer success when received success status. */
      if (status == kStatus_Success)
      {
+    	// (*i2c_sdk_currentTxRx.st_ready)=1;
+    	 //i2c_sdk_initBufferTxRx();
          completionFlag = true;
      }
      /* Signal transfer success when received success status. */
